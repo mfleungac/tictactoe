@@ -26,8 +26,8 @@ var inputBoardSizeValue = String(boardSize);
 
 function init() {
   resetVariables();
-  inputNumberOfPlayer.value = String(totalNumberOfPlayer);
-  inputBoardSize.value = String(boardSize);
+  inputNumberOfPlayer.value = inputNumberOfPlayerValue;
+  inputBoardSize.value = inputBoardSizeValue;
   resetButton.addEventListener("click", function () {
     console.log("reset click");
     if (playerIndexWon) {
