@@ -21,10 +21,13 @@ let currentPlayerIndex = 1;
  */
 let playerIndexWon = null;
 
-var inputNumberOfPlayerValue = "";
-var inputBoardSizeValue = "";
+var inputNumberOfPlayerValue = String(totalNumberOfPlayer);
+var inputBoardSizeValue = String(boardSize);
 
-function setupEventListener() {
+function init() {
+  resetVariables();
+  inputNumberOfPlayer.value = String(totalNumberOfPlayer);
+  inputBoardSize.value = String(boardSize);
   resetButton.addEventListener("click", function () {
     console.log("reset click");
     if (playerIndexWon) {
@@ -64,7 +67,7 @@ function setupEventListener() {
   });
 }
 
-function init() {
+function resetVariables() {
   playerIndexWon = null;
   currentPlayerIndex = 1;
   mainBoards = new Array(boardSize)
@@ -214,12 +217,11 @@ function end(winnerPlayer) {
 
 function reset() {
   if (confirm("Do you want to reset?")) {
-    init();
+    resetVariables();
     render();
   }
 }
 
-setupEventListener();
 init();
 render();
 
