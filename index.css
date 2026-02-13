@@ -1,0 +1,9 @@
+section {
+  margin-bottom: 20px;
+}
+
+#board button {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+}

@@ -54,11 +54,7 @@ function setupEventListener() {
       alert("Number of player must be between 2 and 10");
       return;
     }
-    if (
-      isNaN(parsedBoardSize) ||
-      parsedBoardSize < 3 ||
-      parsedBoardSize > 10
-    ) {
+    if (isNaN(parsedBoardSize) || parsedBoardSize < 3 || parsedBoardSize > 10) {
       alert("Board size must be between 3 and 10");
       return;
     }
@@ -131,6 +127,7 @@ function playerMove(playerIndex, x, y) {
 
 function getWinner(targetBoards) {
   console.log("getWinner");
+  const size = targetBoards.length;
 
   // Case 1.A Check diagonals left to right
   let isDiagonalWinA = true;
@@ -138,7 +135,7 @@ function getWinner(targetBoards) {
   if (!firstASpot) {
     isDiagonalWinA = false;
   } else {
-    for (let i = 1; i < boardSize; i++) {
+    for (let i = 1; i < size; i++) {
       if (targetBoards[i][i] !== firstASpot) {
         isDiagonalWinA = false;
         break;
@@ -151,13 +148,13 @@ function getWinner(targetBoards) {
 
   // Case 1.B Check diagonals right to left
   let isDiagonalWinB = true;
-  const firstBSpot = targetBoards[0][boardSize - 2];
+  const firstBSpot = targetBoards[0][size - 1];
   if (!firstBSpot) {
-    isDiagonalWinA = false;
+    isDiagonalWinB = false;
   } else {
-    for (let i = 1; i < boardSize; i++) {
+    for (let i = 1; i < size; i++) {
       const rolIndex = i;
-      const colIndex = boardSize - i - 1;
+      const colIndex = size - i - 1;
       if (targetBoards[rolIndex][colIndex] !== firstBSpot) {
         isDiagonalWinB = false;
         break;
@@ -179,7 +176,7 @@ function getWinner(targetBoards) {
     if (!targetBoards[0][colIndex]) {
       return false;
     }
-    for (let i = 1; i < boardSize; i++) {
+    for (let i = 1; i < size; i++) {
       if (targetBoards[i][colIndex] !== targetBoards[0][colIndex]) {
         return false;
       }
@@ -188,7 +185,7 @@ function getWinner(targetBoards) {
   }
 
   // Check each col or row
-  for (let i = 0; i < boardSize; i++) {
+  for (let i = 0; i < size; i++) {
     if (checkColIsAllSame(i)) {
       return targetBoards[0][i];
     }
@@ -225,3 +222,98 @@ function reset() {
 setupEventListener();
 init();
 render();
+
+// Testing for getWinner function
+const getWinnerCases = [
+  // 3x3: row win (player 1)
+  [
+    [
+      [1, 1, 1],
+      [2, null, 2],
+      [null, null, null],
+    ],
+    1,
+  ],
+
+  // 3x3: row win (player 2)
+  [
+    [
+      [1, null, 1],
+      [2, 2, 2],
+      [1, null, null],
+    ],
+    2,
+  ],
+
+  // 3x3: col win (player 1)
+  [
+    [
+      [1, 2, null],
+      [1, 2, null],
+      [1, null, 2],
+    ],
+    1,
+  ],
+
+  // 3x3: col win (player 2)
+  [
+    [
+      [1, 2, 1],
+      [null, 2, null],
+      [1, 2, null],
+    ],
+    2,
+  ],
+
+  // 3x3: diagonal TL->BR win (player 1)
+  [
+    [
+      [1, 2, 2],
+      [null, 1, null],
+      [2, null, 1],
+    ],
+    1,
+  ],
+
+  // 3x3: diagonal TR->BL win (player 2)
+  // Good case to catch diagonal-right-to-left bugs
+  [
+    [
+      [1, null, 2],
+      [1, 2, null],
+      [2, null, 1],
+    ],
+    2,
+  ],
+
+  // 3x3: no winner
+  [
+    [
+      [1, 2, 1],
+      [2, 1, 2],
+      [2, 1, 2],
+    ],
+    undefined,
+  ],
+
+  // 3x3: board not finished, no winner
+  [
+    [
+      [1, null, null],
+      [null, 2, null],
+      [null, null, null],
+    ],
+    undefined,
+  ],
+];
+
+getWinnerCases.forEach(([boardCase, expectedWinner], index) => {
+  const actualWinner = getWinner(boardCase);
+  if (actualWinner !== expectedWinner) {
+    console.error(
+      `getWinner test case ${index} failed: expected ${expectedWinner}, got ${actualWinner}`,
+    );
+  } else {
+    console.log(`getWinner test case ${index} passed`);
+  }
+});
